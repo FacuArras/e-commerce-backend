@@ -22,4 +22,4 @@ export default methods({
             res.send("ok");
         };*/
     }
-});
+}); 
