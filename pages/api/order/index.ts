@@ -53,7 +53,7 @@ const handler = methods({
                     ],
                     external_reference: order.id,
                     back_urls: {
-                        success: "https://e-commerce-backend-iy2gnv6p9-facuarras.vercel.app/ipn/mercadopago"
+                        success: process.env.BACK_URL + "/ipn/mercadopago"
                     }
                 });
 
