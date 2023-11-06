@@ -40,18 +40,21 @@ const handler = methods({
 
                 /* Crea una preferencia en MercadoPago con la información del producto */
                 const preference = await createPreference({
-                    'items': [
+                    items: [
                         {
-                            'id': productId,
-                            'title': product["Name"],
-                            'description': product["Description"],
-                            'picture_url': product["Images"].url,
-                            'quantity': parseInt(q),
-                            'currency_id': 'ARS',
-                            'unit_price': product["Unit cost"]
+                            id: productId,
+                            title: product["Name"],
+                            description: product["Description"],
+                            picture_url: product["Images"].url,
+                            quantity: parseInt(q),
+                            currency_id: "ARS",
+                            unit_price: product["Unit cost"]
                         }
                     ],
-                    'external_reference': order.id
+                    external_reference: order.id,
+                    back_urls: {
+                        success: "https://e-commerce-backend-iy2gnv6p9-facuarras.vercel.app/ipn/mercadopago"
+                    }
                 });
 
                 /* Responde con la URL de la preferencia creada */

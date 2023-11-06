@@ -23,6 +23,6 @@ export async function createPreference(data) {
 
         return dataRes;
     } catch (error) {
-        console.error('Error al crear la preferencia en MercadoPago: ' + error.message);
+        throw ('Error al crear la preferencia en MercadoPago: ' + error.message);
     };
 };
