@@ -52,7 +52,7 @@ const handler = methods({
                         }
                     ],
                     external_reference: order.id,
-                    notification_url: "https://e-commerce-backend-mocha-gamma.vercel.app/ipn/mercadopago"
+                    notification_url: "https://e-commerce-backend-mocha-gamma.vercel.app/api/ipn/mercadopago"
                 });
 
                 /* Responde con la URL de la preferencia creada */
