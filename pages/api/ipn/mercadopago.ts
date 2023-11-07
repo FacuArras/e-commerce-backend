@@ -10,8 +10,8 @@ export default methods({
 
             const order = await getMerchantOrder(id);
 
-            if (topic === "merchant_order") {
-                if (order.order_status === "paid") {
+            if (topic == "merchant_order") {
+                if (order.order_status == "paid") {
                     const orderId = order.external_reference;
                     const myOrder = new Order(orderId);
                     await myOrder.getData();
