@@ -8,15 +8,21 @@ export default methods({
         try {
             const { id, topic } = req.query;
 
-            const order = await getMerchantOrder(id);
-
             if (topic == "merchant_order") {
+                const order = await getMerchantOrder(id);
+
                 if (order.order_status == "paid") {
-                    const orderId = order.external_reference;
+                    await Order.createNewOrder({
+                        orderId: order.external_reference,
+                        status: "paid",
+                        info: "Created in api/ipn/mercadopago"
+                    });
+
+                    /* const orderId = order.external_reference;
                     const myOrder = new Order(orderId);
                     await myOrder.getData();
                     myOrder.data.status = "paid";
-                    await myOrder.pushData();
+                    await myOrder.pushData(); */
                 };
             } else {
                 res.send("ok");
