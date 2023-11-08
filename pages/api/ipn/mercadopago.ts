@@ -15,7 +15,7 @@ export default methods({
                     await Order.createNewOrder({
                         orderId: order.external_reference,
                         status: "paid",
-                        info: "Created in api/ipn/mercadopago"
+                        info: order
                     });
 
                     /* const orderId = order.external_reference;
