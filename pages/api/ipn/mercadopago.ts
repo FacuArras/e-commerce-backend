@@ -12,23 +12,19 @@ export default methods({
                 const order = await getMerchantOrder(id);
 
                 if (order.order_status == "paid") {
-                    await Order.createNewOrder({
-                        orderId: order.external_reference,
-                        status: "paid",
-                        info: order
-                    });
-
-                    /* const orderId = order.external_reference;
+                    const orderId = order.external_reference;
                     const myOrder = new Order(orderId);
                     await myOrder.getData();
                     myOrder.data.status = "paid";
-                    await myOrder.pushData(); */
+                    await myOrder.pushData();
+
+                    res.status(201).json({ message: "Pago realizado correctamente." });
                 };
             } else {
-                res.send("ok");
+                res.status(200).json({ message: "No es una órden de compra" });
             };
         } catch {
-            res.status(200).send("not ok");
+            res.status(200).json({ message: "Ha ocurrido un problema al obtener la compra." });
         };
     }
 }); 
