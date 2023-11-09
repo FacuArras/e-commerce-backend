@@ -31,4 +31,14 @@ export class User {
         newUser.data = data;
         return newUser;
     };
+
+    static async getOneUser(userId) {
+        const userData = await collection.doc(userId).get();
+
+        if (userData.exists) {
+            return userData;
+        } else {
+            return null;
+        };
+    };
 };

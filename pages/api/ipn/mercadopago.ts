@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Order } from "models/order";
 import { getMerchantOrder } from "lib/mercadopago";
+import { sendPaymentValidationToUser } from "lib/resend";
 import * as methods from "micro-method-router";
 
 export default methods({
@@ -17,6 +18,8 @@ export default methods({
                     await myOrder.getData();
                     myOrder.data.status = "paid";
                     await myOrder.pushData();
+
+                    await sendPaymentValidationToUser(myOrder.id, order.items[0].title);
 
                     res.status(201).json({ message: "Pago realizado correctamente." });
                 };
