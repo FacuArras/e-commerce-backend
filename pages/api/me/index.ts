@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { authMiddleware } from "lib/middlewares";
 import { User } from "models/user";
+import { sendPaymentValidationToUser } from "lib/resend";
 import * as methods from "micro-method-router";
 
 async function getMe(req: NextApiRequest, res: NextApiResponse, token) {

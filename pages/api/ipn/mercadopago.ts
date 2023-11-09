@@ -20,7 +20,7 @@ export default methods({
                     myOrder.data.productName = order.items[0].title;
                     await myOrder.pushData();
 
-                    await sendPaymentValidationToUser(myOrder.id, myOrder.data.productName);
+                    await sendPaymentValidationToUser(myOrder.data.userId, myOrder.data.productName);
 
                     res.status(201).json({ message: "Pago realizado correctamente." });
                 };
