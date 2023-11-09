@@ -17,9 +17,10 @@ export default methods({
                     const myOrder = new Order(orderId);
                     await myOrder.getData();
                     myOrder.data.status = "paid";
+                    myOrder.data.productName = order.items[0].title;
                     await myOrder.pushData();
 
-                    await sendPaymentValidationToUser(myOrder.id, order.items[0].title);
+                    await sendPaymentValidationToUser(myOrder.id, myOrder.data.productName);
 
                     res.status(201).json({ message: "Pago realizado correctamente." });
                 };
