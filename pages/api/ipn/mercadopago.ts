@@ -33,13 +33,13 @@ export default methods({
                     await myOrder.pushData();
 
                     /* Envía un email al usuario con la confirmación de su pago */
-                    await sendPaymentValidationToUser(myOrder.data.userId, myOrder.data.productName, true);
+                    await sendPaymentValidationToUser(myOrder.data.userId, order.items[0].title, true);
 
                     /* Crea un nuevo record en Airtable para notificar la órden realizada por el usuario */
                     const airtableRes = await createOrderRecord(myOrder.data.userId, myOrder.data.productId);
 
                     res.status(201).json({ message: "Pago realizado correctamente." });
-                } else if (order.order_status == "expired") {
+                } else if (order.status == "closed") {
                     /* Si no se recibió un pago correctamente obtiene el id de la órden */
                     const orderId = order.external_reference;
 
@@ -56,7 +56,7 @@ export default methods({
                     await myOrder.pushData();
 
                     /* Envía un email al usuario para informarle del rechazo de su pago */
-                    await sendPaymentValidationToUser(myOrder.data.userId, myOrder.data.productName, false);
+                    await sendPaymentValidationToUser(myOrder.data.userId, order.items[0].title, false);
 
                     res.status(201).json({ message: "Pago rechazado." });
                 };
