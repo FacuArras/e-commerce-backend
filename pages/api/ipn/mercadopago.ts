@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Order } from "models/order";
 import { getMerchantOrder } from "lib/mercadopago";
 import { sendPaymentValidationToUser } from "lib/resend";
+import { createOrderRecord } from "lib/airtable";
 import * as methods from "micro-method-router";
 
 export default methods({
@@ -33,6 +34,9 @@ export default methods({
 
                     /* Envía un email al usuario con la confirmación de su pago */
                     await sendPaymentValidationToUser(myOrder.data.userId, myOrder.data.productName, true);
+
+                    /* Crea un nuevo record en Airtable para notificar la órden realizada por el usuario */
+                    const airtableRes = await createOrderRecord(myOrder.data.userId, myOrder.data.productId);
 
                     res.status(201).json({ message: "Pago realizado correctamente." });
                 } else if (order.order_status == "expired") {

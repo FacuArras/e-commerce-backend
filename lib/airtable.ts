@@ -28,7 +28,7 @@ export async function getAllProducts() {
     };
 };
 
-export async function createOrderRecord(userId, orderNumber, productId) {
+export async function createOrderRecord(userId, productId) {
     try {
         /* Crea un nuevo record en "Client Orders" con la data pasada */
         await base('Client orders').create([
@@ -37,14 +37,15 @@ export async function createOrderRecord(userId, orderNumber, productId) {
                     "Client": [
                         "recdoYfqwDbSVZnuu"
                     ],
-                    "Order no.": orderNumber,
+                    "Order no.": Math.floor(Math.random() * (9999 - 1 + 1)) + 1,
                     "Fulfill by": nextMonday(new Date()).toDateString(),
                     "Status": "Invoiced",
                     "Order line items": [
                         "rec9kT9pzwh3ZUrlu",
                         "rec3bYcwuo6V2YxtD"
                     ],
-                    "Client id": userId
+                    "Client id": userId,
+                    "Product id": productId
                 }
             }
         ]);
