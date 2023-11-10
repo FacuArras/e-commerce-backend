@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as methods from "micro-method-router";
 import { getOneProduct } from "lib/algolia";
-import getOffsetLimit from "hooks/offsetLimit";
 
 export default methods({
     async get(req: NextApiRequest, res: NextApiResponse) {

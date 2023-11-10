@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { authMiddleware } from "lib/middlewares";
 import { User } from "models/user";
-import { sendPaymentValidationToUser } from "lib/resend";
 import * as methods from "micro-method-router";
+import { createOrderRecord } from "lib/airtable";
 
 async function getMe(req: NextApiRequest, res: NextApiResponse, token) {
     try {
@@ -40,10 +40,24 @@ async function updateMe(req: NextApiRequest, res: NextApiResponse, token) {
     };
 };
 
+async function create(req: NextApiRequest, res: NextApiResponse, token) {
+    try {
+        const airtableRes = await createOrderRecord(token.userId, 1, "rec4d6H7PntXTU4Xb");
+
+        res.status(200).json({
+            "message": "Órden creada correctamente.",
+            airtableRes
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    };
+};
+
 /* Crea un controlador de rutas que manejará solamente las solicitudes GET y PATCH */
 const handler = methods({
     get: getMe,
-    patch: updateMe
+    patch: updateMe,
+    post: create
 });
 
 /* Aplica un middleware de autenticación para asegurarse de que solo 

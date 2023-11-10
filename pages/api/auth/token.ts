@@ -27,8 +27,9 @@ export default methods({
                 } else {
                     /* Genera un token */
                     const token = generateToken({ userId: auth.data.userId });
+
                     /* Invalida el código */
-                    auth.invalidateCode();
+                    await auth.invalidateCode();
 
                     res.status(202).json({ token });
                 };

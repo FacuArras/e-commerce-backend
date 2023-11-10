@@ -1,4 +1,5 @@
 import Airtable from 'airtable';
+import { nextMonday } from 'date-fns'
 
 Airtable.configure({
     endpointUrl: 'https://api.airtable.com',
@@ -24,5 +25,30 @@ export async function getAllProducts() {
         return products;
     } catch (error) {
         throw ({ message: "Error al obtener los productos de Airtable.", error });
+    };
+};
+
+export async function createOrderRecord(userId, orderNumber, productId) {
+    try {
+        /* Crea un nuevo record en "Client Orders" con la data pasada */
+        await base('Client orders').create([
+            {
+                "fields": {
+                    "Client": [
+                        "recdoYfqwDbSVZnuu"
+                    ],
+                    "Order no.": orderNumber,
+                    "Fulfill by": nextMonday(new Date()).toDateString(),
+                    "Status": "Invoiced",
+                    "Order line items": [
+                        "rec9kT9pzwh3ZUrlu",
+                        "rec3bYcwuo6V2YxtD"
+                    ],
+                    "Client id": userId
+                }
+            }
+        ]);
+    } catch (error) {
+        throw (error);
     };
 };

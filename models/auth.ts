@@ -14,7 +14,7 @@ export class Auth {
     };
 
     setData(data) {
-        /* Modifica la data de la instancia actual con la data pasada */
+        /* Modifica la data de la instancia actual con la data recibida */
         this.data = data;
     };
 
@@ -87,10 +87,10 @@ export class Auth {
         /* Crea un nuevo documento en Firebase */
         const newAuthSnap = await collection.add(data);
 
-        /* Crea una nueva instancia de la clase Auth */
+        /* Crea una nueva instancia de la clase Auth con el id del documento creado */
         const newAuth = new Auth(newAuthSnap.id);
 
-        /* Modifica la data de la instancia con la data de la base de datos */
+        /* Modifica la data de la instancia con la data recibida*/
         newAuth.setData(data);
 
         /* Retorna la información del auth creado */

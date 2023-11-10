@@ -18,15 +18,16 @@ export async function sendCodeToEmail(email: string, subject: string, message: s
     };
 };
 
-export async function sendPaymentValidationToUser(userId, productName) {
+export async function sendPaymentValidationToUser(userId, productName, accepted) {
     try {
         const userData = await User.getOneUser(userId);
 
         const data = await resend.emails.send({
             from: 'ecommercebackend@resend.dev',
             to: userData.data().email,
-            subject: "¡Tu pago se realizó correctamente!",
-            html: `<div><p>¡La compra de ${productName} se realizó de manera correcta!</p></div>`,
+            subject: accepted ? "¡Tu pago se realizó correctamente!" : "Tu pago ha sido rechazado :(",
+            html: accepted ? `<div><p>¡La compra de ${productName} se realizó de manera correcta!</p></div>`
+                : `<div><p>La compra de ${productName} no pudo realizarse</p></div>`,
         });
 
         return data;
