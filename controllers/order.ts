@@ -30,8 +30,7 @@ export async function receiveOrder(id) {
 
             /* Crea un nuevo record en Airtable para notificar la órden realizada por el usuario */
             const airtableRes = await createOrderRecord(myOrder.data.userId, myOrder.data.productId);
-        }
-
+        };
     } else {
         /* Si no se recibió un pago correctamente obtiene el id de la órden */
         const orderId = order.external_reference;
