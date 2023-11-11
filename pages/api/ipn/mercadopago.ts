@@ -26,17 +26,19 @@ export default methods({
                     /* Obtiene la data de la órden en la base de datos */
                     await myOrder.getData();
 
-                    /* Modifica el estado de pago para cerrarlo en "paid" */
-                    myOrder.data.status = "paid";
+                    if (myOrder.data.status !== "paid") {
+                        /* Modifica el estado de pago para cerrarlo en "paid" */
+                        myOrder.data.status = "paid";
 
-                    /* Envía los datos modificados de vuelta a la base de datos */
-                    await myOrder.pushData();
+                        /* Envía los datos modificados de vuelta a la base de datos */
+                        await myOrder.pushData();
 
-                    /* Envía un email al usuario con la confirmación de su pago */
-                    await sendPaymentValidationToUser(myOrder.data.userId, order.items[0].title, true);
+                        /* Envía un email al usuario con la confirmación de su pago */
+                        await sendPaymentValidationToUser(myOrder.data.userId, order.items[0].title, true);
 
-                    /* Crea un nuevo record en Airtable para notificar la órden realizada por el usuario */
-                    const airtableRes = await createOrderRecord(myOrder.data.userId, myOrder.data.productId);
+                        /* Crea un nuevo record en Airtable para notificar la órden realizada por el usuario */
+                        const airtableRes = await createOrderRecord(myOrder.data.userId, myOrder.data.productId);
+                    }
 
                     res.status(201).json({ message: "Pago realizado correctamente." });
                 } else {
@@ -49,14 +51,16 @@ export default methods({
                     /* Obtiene la data de la órden en la base de datos */
                     await myOrder.getData();
 
-                    /* Modifica el estado de pago para cerrarlo en "cancelled" */
-                    myOrder.data.status = "cancelled";
+                    if (myOrder.data.status !== "cancelled") {
+                        /* Modifica el estado de pago para cerrarlo en "cancelled" */
+                        myOrder.data.status = "cancelled";
 
-                    /* Envía los datos modificados de vuelta a la base de datos */
-                    await myOrder.pushData();
+                        /* Envía los datos modificados de vuelta a la base de datos */
+                        await myOrder.pushData();
 
-                    /* Envía un email al usuario para informarle del rechazo de su pago */
-                    await sendPaymentValidationToUser(myOrder.data.userId, order.items[0].title, false);
+                        /* Envía un email al usuario para informarle del rechazo de su pago */
+                        await sendPaymentValidationToUser(myOrder.data.userId, order.items[0].title, false);
+                    }
 
                     res.status(201).json({ message: "Pago rechazado." });
                 };
