@@ -39,7 +39,7 @@ export default methods({
                     const airtableRes = await createOrderRecord(myOrder.data.userId, myOrder.data.productId);
 
                     res.status(201).json({ message: "Pago realizado correctamente." });
-                } else if (order.cancelled) {
+                } else if (order.status == "expired") {
                     /* Si no se recibió un pago correctamente obtiene el id de la órden */
                     const orderId = order.external_reference;
 
