@@ -1,8 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Order } from "models/order";
-import { getMerchantOrder } from "lib/mercadopago";
-import { sendPaymentValidationToUser } from "lib/resend";
-import { createOrderRecord } from "lib/airtable";
+import { receiveOrder } from "controllers/order";
 import * as methods from "micro-method-router";
 
 export default methods({
@@ -12,59 +9,13 @@ export default methods({
 
             /* Verifica si la órden recibida tiene el topic de "merchant_order" */
             if (topic == "merchant_order") {
-                /* Si el topic es correcto, busca la información de la órden en MercadoPago */
-                const order = await getMerchantOrder(id);
+                /* Recibo la órden y realizo sus correspondientes acciones */
+                await receiveOrder(id);
 
-                /* Verifica si la órden fue pagada o rechazada */
-                if (order.order_status == "paid") {
-                    /* Si se recibió el pago correctamente se obtiene el id de la órden */
-                    const orderId = order.external_reference;
-
-                    /* Crea una nueva instancia de order con el id recibido */
-                    const myOrder = new Order(orderId);
-
-                    /* Obtiene la data de la órden en la base de datos */
-                    await myOrder.getData();
-
-                    if (myOrder.data.status !== "paid") {
-                        /* Modifica el estado de pago para cerrarlo en "paid" */
-                        myOrder.data.status = "paid";
-
-                        /* Envía los datos modificados de vuelta a la base de datos */
-                        await myOrder.pushData();
-
-                        /* Envía un email al usuario con la confirmación de su pago */
-                        await sendPaymentValidationToUser(myOrder.data.userId, order.items[0].title, true);
-
-                        /* Crea un nuevo record en Airtable para notificar la órden realizada por el usuario */
-                        const airtableRes = await createOrderRecord(myOrder.data.userId, myOrder.data.productId);
-                    }
-
-                    res.status(201).json({ message: "Pago realizado correctamente." });
-                } else {
-                    /* Si no se recibió un pago correctamente obtiene el id de la órden */
-                    const orderId = order.external_reference;
-
-                    /* Crea una nueva instancia de order con el id recibido */
-                    const myOrder = new Order(orderId);
-
-                    /* Obtiene la data de la órden en la base de datos */
-                    await myOrder.getData();
-
-                    if (myOrder.data.status !== "cancelled") {
-                        /* Modifica el estado de pago para cerrarlo en "cancelled" */
-                        myOrder.data.status = "cancelled";
-
-                        /* Envía los datos modificados de vuelta a la base de datos */
-                        await myOrder.pushData();
-
-                        /* Envía un email al usuario para informarle del rechazo de su pago */
-                        await sendPaymentValidationToUser(myOrder.data.userId, order.items[0].title, false);
-                    }
-
-                    res.status(201).json({ message: "Pago rechazado." });
-                };
+                /* Responde con un status de 201 sea correcto el pago o no para que MercadoPago no falle */
+                res.status(201).json({ message: "Pago recibido correctamente." });
             } else {
+                /* Si no es del tipo "merchant_order" responde con el error correspondiente */
                 res.status(200).json({ message: "No es una órden de compra" });
             };
         } catch {
